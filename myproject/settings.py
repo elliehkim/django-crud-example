@@ -31,9 +31,6 @@ if 'PYTHONPATH' in os.environ:
     # Ensure the below line is set to the region where your elastic beanstalk is set up
     ALLOWED_HOSTS = ['.ap-southeast-2.elasticbeanstalk.com']
 else:
-    # SECURITY WARNING: don't run with debug turned on in production!
-    # We need this to work in development environment but not on testing or production environments
-    # We do not want to reveal errors in our server-side to the public in case if that happens
     DEBUG = True
     ALLOWED_HOSTS = []
 
@@ -143,4 +140,45 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+
+# Resource - https://testdriven.io/blog/storing-django-static-and-media-files-on-amazon-s3/
+if 'S3_BUCKET' in os.environ:
+    # aws settings
+    AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+    print("IS IT HERE??")
+    print(AWS_ACCESS_KEY_ID)
+
+    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    print("IS IT HERE??")
+    print(AWS_SECRET_ACCESS_KEY)
+
+    AWS_STORAGE_BUCKET_NAME = os.environ['S3_BUCKET']
+    print("IS IT HERE??")
+    print(AWS_STORAGE_BUCKET_NAME)
+
+    AWS_S3_REGION_NAME = 'ap-northeast-2'
+
+    #AWS_DEFAULT_ACL = 'public-read'
+    AWS_DEFAULT_ACL = None
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+    print("IS IT HERE??")
+    print(AWS_S3_CUSTOM_DOMAIN)
+
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    # s3 static settings
+    AWS_LOCATION = 'static'
+
+    STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+    print("IS IT HERE??")
+    print(STATIC_URL)
+
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+else:   
+    STATIC_URL = '/static/'
+    # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
