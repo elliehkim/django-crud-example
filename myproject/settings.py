@@ -28,7 +28,7 @@ SECRET_KEY = 'iw+b1%p9&zw_+#gx+m&aw$gza2-_p6$03s3&4p+4kbd8%o0b_8'
 if 'PYTHONPATH' in os.environ:
     # Debug = False
     # Ensure the below line is set to the region where your elastic beanstalk is set up
-    ALLOWED_HOSTS = ['.ap-southeast-2.elasticbeanstalk.com']
+    ALLOWED_HOSTS = ['.ap-northeast-2.elasticbeanstalk.com']
 else:
     DEBUG = True
     ALLOWED_HOSTS = []
@@ -180,4 +180,4 @@ else:
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')eb
